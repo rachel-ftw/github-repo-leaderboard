@@ -1,4 +1,4 @@
-// import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch'
 import parseUrl from 'url-parse'
 
 export const COMPUTE_LEADERBOARD_REQUEST = 'COMPUTE_LEADERBOARD_REQUEST'
@@ -24,10 +24,9 @@ export default function computeLeaderboard() {
     const owner = (url.query && url.query.owner) || 'LearnersGuild'
     const repo = (url.query && url.query.repo) || 'learning-os'
     dispatch(computeLeaderboardRequest())
-    // TODO: use isomorphic-fetch and /leaderboard API to compute leaders array
-    const leaders = []
-    dispatch(computeLeaderboardSuccess(leaders))
-    // TODO: handle API errors
-    // dispatch(computeLeaderboardFailure(error))
+    fetch(`http://localhost:9090/leaderboard?owner=${owner}&repo=${repo}`)
+      .then(resp => resp.json())
+      .then(leaders => dispatch(computeLeaderboardSuccess(leaders)))
+      .catch(error => dispatch(computeLeaderboardFailure(error)))
   }
 }

@@ -8,6 +8,7 @@ import enforceSecure from 'express-sslify'
 
 import configureDevEnvironment from './configureDevEnvironment'
 import handleRender from './render'
+import computeLeaders from './computeLeaders'
 
 export function start() {
   const serverPort = parseInt(process.env.PORT, 10)
@@ -29,24 +30,8 @@ export function start() {
   app.use(serveStatic(path.join(__dirname, '../public')))
 
   // The leaderboard API route
-  app.get('/leaderboard', (req, res) => {
-    // TODO: use isomorphic-fetch and GitHub API (using process.env.GITHUB_API_TOKEN) to compute leaders array
-    const leaders = [{
-      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
-      login: 'octocat',
-      count: 12,
-    }, {
-      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
-      login: 'octocat',
-      count: 12,
-    }, {
-      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
-      login: 'octocat',
-      count: 12,
-    }]
-    res.status(200).json(leaders)
-  })
-
+  app.get('/leaderboard', computeLeaders)
+  
   // Default React application
   app.get('/', handleRender)
   app.listen(serverPort, (error) => {
