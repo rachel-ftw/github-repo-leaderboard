@@ -1,0 +1,14 @@
+machine:
+  node:
+    version: 5.5.0
+
+test:
+  override:
+    - npm run lint
+    - npm test -- --verbose
+
+deployment:
+  production:
+    branch: master
+    heroku:
+      appname: lg-github-org-leaderboard
