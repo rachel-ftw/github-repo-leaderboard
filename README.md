@@ -25,8 +25,7 @@ Be sure you've read the [instructions for contributing](./CONTRIBUTING.md).
 
         PORT=9090
         APP_BASEURL=http://localhost:9090
-        ICONS_SERVICE_TAGS_API_URL=https://icons.learnersguild.org/tags
-        GITHUB_API_TOKEN=857aa3242bd816b3e596824552a5620fddaf975a
+        GITHUB_API_TOKEN=<a valid GitHub API token>
 
 4. Run the server:
 
