@@ -21,8 +21,8 @@ export default function computeLeaderboard() {
   return (dispatch, getState) => {
     const path = getState().routing.path || '/'
     const url = parseUrl(path, true)
-    const owner = (url.query && url.query.owner) || 'LearnersGuild'
-    const repo = (url.query && url.query.repo) || 'learning-os'
+    const owner = (url.query && url.query.owner) || 'facebook'
+    const repo = (url.query && url.query.repo) || 'react'
     dispatch(computeLeaderboardRequest())
     fetch(`http://localhost:9090/leaderboard?owner=${owner}&repo=${repo}`)
       .then(resp => resp.json())
