@@ -22,28 +22,40 @@ export default function computeLeaders(req, res) {
 
   getCommittersForRepo(owner, repo)
     .then(commits => {
-      const summarizedCommits = commits.map(commit => {
-        return {
-          avatar_url: commit.committer.avatar_url,
-          login: commit.committer.login,
-        }
-      })
+      const leaders = commits
+        // filter out commits with no author
+        .filter(commit => !!commit.author && !!commit.author.login)
+        // sort by login to cluster the commits
+        .sort((prev, curr) => {
+          if (prev.author.login < curr.author.login) {
+            return -1
+          } else if (prev.author.login > curr.author.login) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+        // count commits per author
+        .reduce((lastReduce, commit) => {
+          const next = lastReduce.slice(0)
+          const leader = next[next.length - 1]
+          if (!leader || leader.login !== commit.author.login) {
+            next.push({
+              login: commit.author.login,
+              avatar_url: commit.author.avatar_url,
+              count: 1,
+            })
+          } else {
+            leader.count++
+          }
+          return next
+        }, [])
+        // sort descending by number of commits
+        .sort((prev, curr) => curr.count - prev.count)
+        // return top 5
+        .slice(0, 5)
 
-      let committerInfo = {}
-      for (let i in commits) {
-        const commit = commits[i]
-        const login = commit.committer.login
-        const avatar_url = commit.committer.avatar_url
-        let committer = committerInfo[login]
-        if (!committer) {
-          committer = committerInfo[login] = { avatar_url, login, count: 0 }
-        }
-        committer.count++
-      }
-      let leaders = _.sortBy(_.values(committerInfo), committer => -committer.count)
-      if (leaders.length > 5) {
-        leaders = leaders.slice(0, 5)
-      }
       res.status(200).json(leaders)
-    }).catch(error => res.status(500).json(error))
+    })
+    .catch(error => res.status(500).json(error))
 }
