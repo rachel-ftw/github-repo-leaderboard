@@ -36,6 +36,10 @@ Be sure you've read the [instructions for contributing](./CONTRIBUTING.md).
 
         $ open http://localhost:9090
 
+6. Launch `flootty` to share your terminal:
+
+        $ flootty -c --unsafe --url=https://floobits.com/learnersguild/github-repo-leaderboard term1
+
 
 ## License
 
