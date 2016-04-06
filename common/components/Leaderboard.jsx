@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react'
 
 export default class Leaderboard extends Component {
   render() {
-    const { leaderboard } = this.props
-    console.log('leaderboard:', leaderboard)
-    
+    const { leaderboard: {isLoading, leaders} } = this.props
+    console.log('isLoading:', isLoading)
+    console.log('leaders:', leaders)
+
     return (
       <div className="display-3">TODO: implement leaderboard</div>
     )

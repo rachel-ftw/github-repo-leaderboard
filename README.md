@@ -8,6 +8,7 @@ It is built using:
 - React.js
 - redux
 - webpack
+- bootstrap 4 alpha
 
 
 ## [Project Specification](SPECIFICATION.md)
@@ -27,18 +28,19 @@ Be sure you've read the [instructions for contributing](./CONTRIBUTING.md).
         APP_BASEURL=http://localhost:9090
         GITHUB_API_TOKEN=<a valid GitHub API token>
 
-4. Run the server:
+4. Launch `flootty` to share your terminal:
+
+        $ flootty -c --unsafe --url=https://floobits.com/learnersguild/github-repo-leaderboard term1
+
+5. Run the server:
 
         $ npm install
         $ npm start
 
-5. Visit the server in your browser:
+6. Visit the server in your browser:
 
         $ open http://localhost:9090
 
-6. Launch `flootty` to share your terminal:
-
-        $ flootty -c --unsafe --url=https://floobits.com/learnersguild/github-repo-leaderboard term1
 
 
 ## License

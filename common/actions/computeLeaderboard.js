@@ -1,3 +1,4 @@
+/* global __CLIENT__ */
 // import fetch from 'isomorphic-fetch'
 import parseUrl from 'url-parse'
 
@@ -21,8 +22,11 @@ export default function computeLeaderboard() {
   return (dispatch, getState) => {
     const path = getState().routing.path || '/'
     const url = parseUrl(path, true)
-    const owner = (url.query && url.query.owner) || 'LearnersGuild'
-    const repo = (url.query && url.query.repo) || 'learning-os'
+    const owner = (url.query && url.query.owner) || 'reactjs'
+    const repo = (url.query && url.query.repo) || 'redux'
+    const computePath = `/leaderboard?owner=${owner}&repo=${repo}`
+    const baseUrl = __CLIENT__ ? '' : process.env.APP_BASEURL
+    const computeUrl = `${baseUrl}${computePath}`
     dispatch(computeLeaderboardRequest())
     // TODO: use isomorphic-fetch and /leaderboard API to compute leaders array
     const leaders = []
