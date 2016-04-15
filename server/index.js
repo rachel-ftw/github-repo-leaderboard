@@ -16,11 +16,11 @@ global.__DEVTOOLS__ = global.__CLIENT__ && global.__DEVELOPMENT__
 function setupCssModulesRequireHook() {
   const hook = require('css-modules-require-hook')
   const sass = require('node-sass')
+  const resourcesScss = fs.readFileSync(path.join(__dirname, '..', 'config', 'sass-resources.scss'))
   hook({
     extensions: [ '.scss' ],
     generateScopedName: '[name]__[local]__[hash:base64:5]',
     preprocessCss: (css) => {
-      const resourcesScss = fs.readFileSync(path.join(__dirname, '..', 'config', 'sass-resources.scss'))
       const result = sass.renderSync({
         data: resourcesScss + css
       })
@@ -30,11 +30,6 @@ function setupCssModulesRequireHook() {
 }
 
 if (__DEVELOPMENT__) {
-  if (require('piping')()) {
-    // application logic here
-    require('dotenv').load()
-    require('./server').start()
-  }
-} else {
-  require('./server').start()
+  require('dotenv').load()
 }
+require('./server').start()

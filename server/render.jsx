@@ -10,8 +10,6 @@ import { Provider } from 'react-redux'
 
 import { RoutingContext, match } from 'react-router'
 
-import getRoutes from '../common/routes'
-import rootReducer from '../common/reducers'
 import iconsMetadata from '../dist/icons-metadata'
 
 
@@ -60,6 +58,13 @@ function fetchAllComponentData(dispatch, routes) {
 
 export default function handleRender(req, res) {
   try {
+    // we require() these rather than importing them because (in development)
+    // we may have flushed the require cache (when files change), but if we
+    // import them at the top, this module will still be holding references to
+    // the previously-imported versions
+    const getRoutes = require('../common/routes').default
+    const rootReducer = require('../common/reducers').default
+
     const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
     const store = createStoreWithMiddleware(rootReducer)
 
