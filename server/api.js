@@ -10,8 +10,12 @@ app.get('/leaderboard', (req, res) => {
   const {owner, repo} = req.query
   const ghUrl = `https://api.github.com/repos/${owner}/${repo}/commits`
 
-  fetch(ghUrl)
-    .then(resp => resp.json())
+  fetch(ghUrl, {
+    headers: {
+      Authorization: `Bearer ${process.env.GITHUB_API_TOKEN}`,
+      Accept: 'application/json',
+    },
+  }).then(resp => resp.json())
     .then(commits => {
       const leaderMap = commits.reduce((leaderMap, commit) => {
         if (!leaderMap[commit.author.login]) {
