@@ -1,5 +1,5 @@
 import express from 'express'
-// import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch'
 
 /* eslint new-cap: [2, {"capIsNewExceptions": ["Router"]}] */
 const app = express.Router()
@@ -7,20 +7,33 @@ const app = express.Router()
 // The leaderboard API route
 app.get('/leaderboard', (req, res) => {
   // TODO: use isomorphic-fetch and GitHub API (using process.env.GITHUB_API_TOKEN) to compute leaders array
-  const leaders = [{
-    avatar_url: 'https://avatars2.githubusercontent.com/u/810438?v=3&s=400',
-    login: 'gaearon',
-    count: 588,
-  }, {
-    avatar_url: 'https://avatars3.githubusercontent.com/u/17882?v=3&s=400',
-    login: 'timdorr',
-    count: 43,
-  }, {
-    avatar_url: 'https://avatars1.githubusercontent.com/u/6018379?v=3&s=400',
-    login: 'ellbee',
-    count: 36,
-  }]
-  res.status(200).json(leaders)
+  const {owner, repo} = req.query
+  const ghUrl = `https://api.github.com/repos/${owner}/${repo}/commits`
+
+  fetch(ghUrl)
+    .then(resp => resp.json())
+    .then(commits => {
+      const leaderMap = commits.reduce((leaderMap, commit) => {
+        if (!leaderMap[commit.author.login]) {
+          leaderMap[commit.author.login] = {
+            avatar_url: commit.author.avatar_url,
+            login: commit.author.login,
+            count: 0,
+          }
+        }
+        leaderMap[commit.author.login].count++
+
+        return leaderMap
+      }, {})
+
+      const leaders = Object.keys(leaderMap)
+        .map(login => leaderMap[login])
+        .sort((authorA, authorB) => authorB.count - authorA.count)
+        .slice(0, 5)
+
+      res.status(200).json(leaders)
+    })
+    .catch(error => res.status(500).send(error))
 })
 
 export default app

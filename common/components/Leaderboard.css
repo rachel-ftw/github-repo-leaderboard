@@ -1,0 +1,13 @@
+img {
+  margin-top: 2rem;
+  width: 100px;
+}
+
+.login {
+  color: blue;
+}
+
+.count {
+  color: green;
+  font-weight: bold;
+}
