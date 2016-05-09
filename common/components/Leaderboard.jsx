@@ -6,9 +6,25 @@ export default class Leaderboard extends Component {
     console.log('isLoading:', isLoading)
     console.log('leaders:', leaders)
 
-    return (
-      <div className="display-3">TODO: implement leaderboard</div>
-    )
+    if (isLoading) {
+      return (
+        <div className="loading">Please wait ...</div>
+      )
+    } else {
+      const items = leaders.map(leader => {
+        return (
+          <li>
+            <img src={leader.avatar_url}/>
+            <span className="name">{leader.login}</span>
+            <span className="count">{leader.count}</span>
+          </li>
+        )
+      })
+
+      return (
+        <ul> {items} </ul>
+      )
+    }
   }
 }
 
@@ -18,3 +34,4 @@ Leaderboard.propTypes = {
     leaders: PropTypes.array,
   }),
 }
+
