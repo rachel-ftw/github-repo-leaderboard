@@ -7,7 +7,19 @@ export default class Leaderboard extends Component {
     console.log('leaders:', leaders)
 
     return (
-      <div className="display-3">TODO: implement leaderboard</div>
+      <div className="main">
+        {
+          leaders.map(function (leader) {
+            return (
+              <div className="leaderItem">
+                <img src={leader.avatar_url}></img>
+                <div className="login">{leader.login}</div>
+                <div className="count">{leader.count}</div>
+              </div>
+            )
+          })
+        }
+      </div>
     )
   }
 }
@@ -18,3 +30,4 @@ Leaderboard.propTypes = {
     leaders: PropTypes.array,
   }),
 }
+
