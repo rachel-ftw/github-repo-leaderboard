@@ -1,5 +1,5 @@
 /* global __CLIENT__ */
-// import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch'
 import parseUrl from 'url-parse'
 
 export const FETCH_REPO_LEADERS_REQUEST = 'FETCH_REPO_LEADERS_REQUEST'
@@ -30,16 +30,32 @@ export default function fetchRepoLeaders() {
     const repo = currentUrlQuery.repo || DEFAULT_REPO
     const leaderboardPath = `${API_ENDPOINT_PATH_LEADERBOARD}?owner=${owner}&repo=${repo}`
     const baseUrl = __CLIENT__ ? '' : process.env.APP_BASEURL
-    const computeUrl = `${baseUrl}${leaderboardPath}`
+    const leaderboardUrl = `${baseUrl}${leaderboardPath}`
 
     // dispatch action signifying that leaderboard data is being loaded
     dispatch(fetchRepoLeadersRequest())
 
+
+    fetch(leaderboardUrl)
+      .then(response => {
+        if (response.status >= 400) {
+            throw new Error("Bad response fetching from GitHub API")
+        }
+
+        return response
+            .json() //returns a promise
+            .then(leaders => {
+                dispatch(fetchRepoLeadersSuccess(leaders))
+            })
+        })
+      .catch( error => {
+            throw new Error("Bad response fetching from GitHub API: " + error)
+      })
+
     // fetch leaderboard data
     // TODO: use isomorphic-fetch and /leaderboard API to compute leaders array,
     // then dispatch the loading success action
-    const leaders = []
-    dispatch(fetchRepoLeadersSuccess(leaders))
+
 
     // handle API errors
     // TODO: process error response as needed and dispatch an appropriate action

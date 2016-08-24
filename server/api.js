@@ -1,6 +1,7 @@
 /* eslint new-cap: [2, {"capIsNewExceptions": ["Router"]}] */
 import express from 'express'
-// import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch'
+import _ from 'lodash'
 
 const app = express.Router()
 
@@ -8,6 +9,9 @@ const app = express.Router()
 app.get('/leaderboard', (req, res) => {
   /* TODO: using isomorphic-fetch, retrieve a collection of commits to a repo from the
    * GitHub API (https://developer.github.com/v3/repos/commits/).
+
+   https://api.github.com/repos/reactjs/redux/commits
+   https://api.github.com/repos/:owner/:repo/commits
    *
    * Transform the data into an array structured like the one below,
    * where each element (object) contains data for each unique contributor.
@@ -19,21 +23,51 @@ app.get('/leaderboard', (req, res) => {
    * For GitHub API authentication, set an auth header in your request:
    *
    * Authorization: Bearer <auth token (process.env.GITHUB_API_TOKEN)>
+
+   [TypeError: Cannot read property 'papermana' of undefined]
+
    */
-  const leaders = [{
-    avatar_url: 'https://avatars2.githubusercontent.com/u/810438?v=3&s=400',
-    login: 'gaearon',
-    count: 588,
-  }, {
-    avatar_url: 'https://avatars3.githubusercontent.com/u/17882?v=3&s=400',
-    login: 'timdorr',
-    count: 43,
-  }, {
-    avatar_url: 'https://avatars1.githubusercontent.com/u/6018379?v=3&s=400',
-    login: 'ellbee',
-    count: 36,
-  }]
-  res.status(200).json(leaders)
+  const {owner, repo} = req.query
+
+  const path = `https://api.github.com/repos/${owner}/${repo}/commits`
+  fetch(path, {
+    headers: {
+      Authorization: `Bearer ${process.env.GITHUB_API_TOKEN}`
+    }
+  })
+    .then(response => {
+      if (response.status >= 400) {
+        return response.json().then(body => {
+          console.error(body)
+          throw new Error('Bad response from server')
+        })
+      }
+
+      return response
+        .json()
+        .then( allCommits => {
+          let reducedCommits = allCommits.reduce((result, commit) => {
+            const author = commit.author
+            if (!result[author.login]) {
+              result[author.login] = {
+                avatar_url: author.avatar_url,
+                login: author.login,
+                count: 0
+              }
+            }
+            result[author.login].count += 1
+            return result
+          }, {})
+
+          reducedCommits = _.map(reducedCommits, value => value)
+          reducedCommits = _.sortByOrder(reducedCommits, 'count', 'desc').slice(0, 5)
+
+          return res.status(200).json(reducedCommits)
+        })
+    }).catch(err => {
+      console.error(err)
+      res.send(500).json(err)
+    })
 })
 
 export default app
