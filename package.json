@@ -1,15 +1,11 @@
 {
-  "name": "github-repo-leaderboard",
+  "name": "github-leaderboard",
   "version": "0.1.0",
   "description": "GitHub Repo Leaderboard",
   "main": "server/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LearnersGuild/github-repo-leaderboard.git"
-  },
-  "author": {
-    "name": "Jeffrey Wescott",
-    "email": "jeffrey@learnersguild.org"
+    "url": "git+https://github.com/LearnersGuild/github-leaderboard.git"
   },
   "scripts": {
     "build": "mkdir -p dist && webpack --config config/webpack-production-config.js",
@@ -22,9 +18,9 @@
   "license": "ISC",
   "private": false,
   "bugs": {
-    "url": "https://github.com/LearnersGuild/github-repo-leaderboard/issues"
+    "url": "https://github.com/LearnersGuild/github-leaderboard/issues"
   },
-  "homepage": "https://github.com/LearnersGuild/github-repo-leaderboard#readme",
+  "homepage": "https://github.com/LearnersGuild/github-leaderboard#readme",
   "dependencies": {
     "babel-core": "^6.3.21",
     "babel-loader": "^6.2.0",

@@ -1,4 +1,4 @@
-# github-repo-leaderboard
+# github-leaderboard-er
 
 This is a simple web application that will display the "top committers in past week" leaderboard for a given GitHub repository. It uses the [GitHub Commits API][github-commits-api] to achieve its functionality.
 
@@ -26,11 +26,11 @@ Be sure you've read the [instructions for contributing](./CONTRIBUTING.md).
 
         PORT=9090
         APP_BASEURL=http://localhost:9090
-        GITHUB_API_TOKEN=<a valid GitHub API token>
+        GITHUB_API_TOKEN=d196a459d29aca442d4a0885efb21117b72d04df
 
 4. Launch `flootty` to share your terminal:
 
-        $ flootty -c --unsafe --url=https://floobits.com/learnersguild/github-repo-leaderboard term1
+        $ flootty -c --unsafe --url=https://floobits.com/prattsj/github-leaderboard-er term1
 
 5. Run the server:
 
