@@ -1,5 +1,5 @@
 /* global __CLIENT__ */
-// import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch'
 import parseUrl from 'url-parse'
 
 export const COMPUTE_LEADERBOARD_REQUEST = 'COMPUTE_LEADERBOARD_REQUEST'
@@ -28,10 +28,17 @@ export default function computeLeaderboard() {
     const baseUrl = __CLIENT__ ? '' : process.env.APP_BASEURL
     const computeUrl = `${baseUrl}${computePath}`
     dispatch(computeLeaderboardRequest())
-    // TODO: use isomorphic-fetch and /leaderboard API to compute leaders array
-    const leaders = []
-    dispatch(computeLeaderboardSuccess(leaders))
-    // TODO: handle API errors
-    // dispatch(computeLeaderboardFailure(error))
+    fetch(computeUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+      .then(resp => resp.json())
+      .then(leaders => dispatch(computeLeaderboardSuccess(leaders)))
+      .catch(err => {
+        console.error(err)
+        dispatch(computeLeaderboardFailure(error))
+      })
   }
 }

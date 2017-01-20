@@ -7,7 +7,7 @@ export default class Leaderboard extends Component {
     console.log('leaders:', leaders)
 
     return (
-      <div className="display-3">TODO: implement leaderboard</div>
+      <div className="display-3">TODO: implement leaderboard 2</div>
     )
   }
 }
